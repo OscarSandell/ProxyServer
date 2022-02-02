@@ -1,6 +1,4 @@
 #!/usr/bin/env python3
-from ast import Bytes
-from http import client
 from socket import *
 #from socket import gethostbyname as ghbn
 
@@ -23,12 +21,11 @@ class Client:
         self.clientsocket.send(message.encode())
         retur = ''
         while True:
-            receive = self.clientsocket.recv(1024)
-            if receive == '':
+            receive = self.clientsocket.recv(1)
+            
+            if not receive:
                 break
-            retur += receive.decode()
-            print(retur)
-        print("Skickat")
+            retur += receive.decode('utf-8')
         print(retur)
         return retur.encode()
     
