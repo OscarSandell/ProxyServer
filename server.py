@@ -16,7 +16,6 @@ class Server:
             self.serversocket.setsockopt(SOL_SOCKET,SO_REUSEADDR,1)
         self.serversocket.bind(('',self.Portnumber))
         self.serversocket.listen(1)
-        print("Väntar på anslutning")
         self.connectionsocket, self.addr = self.serversocket.accept()
         sentence = self.connectionsocket.recv(2048).decode()
         print(sentence)
