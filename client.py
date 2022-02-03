@@ -30,7 +30,7 @@ class Client:
         print(f"Fyllde strängen på {toc - tic:0.4f} sekunder")
 
         retur = retur.decode('utf-8')
-        #print(retur)
+        print(retur)
         return retur.encode()
     
     def close_client(self):
