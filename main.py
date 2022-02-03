@@ -3,24 +3,19 @@ import server
 import client
 import proxyserver
 import socket
-#message , adress = server.listen()
-#print(message)
-#print(adress)
-#client.send(message,adress.split()[1])
 
+def run():
+    proxy = proxyserver.Proxy()
+    message, adress = proxy.myServer.listen()
 
-proxy = proxyserver.Proxy()
-message, adress = proxy.myServer.listen()
-
-print("HEJ")
-print(message)
-print(adress)
-print("Nu ska vi skicka till servern \n")
-returmessage = proxy.myClient.sendtoserver(message,adress.split()[1])
+    print("HEJ")
+    print(message)
+    print(adress)
+    print("Nu ska vi skicka till servern \n")
+    returmessage = proxy.myClient.sendtoserver(message,adress.split()[1])
 #print("\n\n\n" + returmessage.decode())
+    proxy.myServer.sendback(returmessage)
+    proxy.myServer.close_server()
+    proxy.myClient.close_client()
 
-
-proxy.myServer.sendback(returmessage)
-
-proxy.myServer.close_server()
-proxy.myClient.close_client()
+run()
