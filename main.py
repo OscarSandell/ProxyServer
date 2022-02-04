@@ -16,9 +16,11 @@ def run():
         print("------------Making new request--------------")
         request, headers = myServer.get_request()
         text = parse.check_content_type(headers)
+        '''
         if "wp-content/uploads/2016/04/Linkopingskontoret-600x600.jpg" in request:
             headers["GET"] = "https://www.glimstedt.se/wp-content/uploads/2016/04/Linkopingskontoret-600x600.jpg"
             headers["Host:"] = "glimstedt.se"
+        '''
         myClient.establish_serverconnection(headers["Host:"])
         temp = ""
         for key,item in headers.items():
@@ -30,6 +32,7 @@ def run():
             returmessage = parse.parse_response(returmessage.decode()).encode()
         myServer.sendback(returmessage)
         myClient.close_client()
+        myServer.connectionsocket.close()
 
 
 run()
