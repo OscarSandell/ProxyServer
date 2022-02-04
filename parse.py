@@ -21,7 +21,7 @@ def parse_response(s):
 
     message = headers + message
 
-    message = message.replace("UTF-8","hex")
+    #message = message.replace("UTF-8","hex")
     newstring = message
     print(newstring)
     return newstring
