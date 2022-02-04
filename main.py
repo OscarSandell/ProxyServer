@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 from email import header
 from tarfile import HeaderError
+from wsgiref import headers
 import server
 import client
 import parse
@@ -14,18 +15,10 @@ def run():
 
     while True:
         print("------------Making new request--------------")
-        request, headers = myServer.get_request()
+        request = myServer.get_request()
+        headers = make_header_dir(request)
         text = parse.check_content_type(headers)
-        '''
-        if "wp-content/uploads/2016/04/Linkopingskontoret-600x600.jpg" in request:
-            headers["GET"] = "https://www.glimstedt.se/wp-content/uploads/2016/04/Linkopingskontoret-600x600.jpg"
-            headers["Host:"] = "glimstedt.se"
-        '''
         myClient.establish_serverconnection(headers["Host:"])
-        temp = ""
-        for key,item in headers.items():
-            temp += key + " " + item + "\r\n"
-        print("this is temp \n\n\n" + temp)
         myClient.sendtoserver(request)
         returmessage = myClient.listentoserver()
         if text:
@@ -34,13 +27,16 @@ def run():
         myClient.close_client()
         myServer.connectionsocket.close()
 
+def make_header_dir(headers):
+    headers = headers.split("\r\n")
+        #Delar upp headers i en dictionary med headernamn som nycklar
+    temp = {}
+    for header in headers:
+        tmp = header.split()
+        if len(tmp) > 0:
+            temp[tmp[0]] = tmp[1]
+    print("printar headers\n\n\n\n"  )
+    print(temp)
+    return temp 
 
 run()
-'''
-def insert_new_link(headers):
-    
-    for header in headers:
-        
-    if "http://zebroid.ida.liu.se/fakenews/Stockholm-spring.jpg" in headers[0]:
-
-'''

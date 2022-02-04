@@ -15,23 +15,12 @@ class Server:
         self.serversocket.bind(('',self.Portnumber))
         self.serversocket.listen(1)
 
-        
-        
-
     def get_request(self):
         self.connectionsocket, self.addr = self.serversocket.accept()
-        sentence = self.connectionsocket.recv(4096).decode()
+        sentence = self.connectionsocket.recv(8192).decode()
         print(sentence)
-        headers = sentence.split("\r\n")
-        #Delar upp headers i en dictionary med headernamn som nycklar
-        temp = {}
-        for header in headers:
-            tmp = header.split()
-            if len(tmp) > 0:
-                temp[tmp[0]] = tmp[1]
-        print("printar headers\n\n\n\n"  )
-        print(temp)
-        return (sentence,temp)
+
+        return (sentence)
 
     def sendback(self,message):
         self.connectionsocket.send(message)
