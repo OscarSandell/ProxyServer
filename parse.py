@@ -19,16 +19,9 @@ def parse_response(s):
     for key,value in tabell.items():
         message = message.replace(key,value)
 
+    message = headers + message
+
     message = message.replace("UTF-8","hex")
     newstring = message
     print(newstring)
-    #print(sss.encode())
     return newstring
-    
-
-
-    return s
-
-
-#     if words in tabell:
-#            message = message.replace(words,tabell[words])
