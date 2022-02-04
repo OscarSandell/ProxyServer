@@ -21,7 +21,6 @@ class Client:
 
     def sendtoserver(self,message):
         self.clientsocket.send(message.encode())
-        
     
     def listentoserver(self):
         retur = b''
