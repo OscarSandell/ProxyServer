@@ -23,11 +23,15 @@ class Server:
         sentence = self.connectionsocket.recv(4096).decode()
         print(sentence)
         headers = sentence.split("\r\n")
-        print(headers)
-        #print("printar sentence: " + sentence)
+        #Delar upp headers i en dictionary med headernamn som nycklar
+        temp = {}
+        for header in headers:
+            tmp = header.split()
+            if len(tmp) > 0:
+                temp[tmp[0]] = tmp[1]
         print("printar headers\n\n\n\n"  )
-        print(headers)
-        return (sentence,headers)
+        print(temp)
+        return (sentence,temp)
 
     def sendback(self,message):
         self.connectionsocket.send(message)

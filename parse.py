@@ -1,4 +1,4 @@
-tabell = {"Stockholm-spring.jpg":"files/styles/max_1300x1300/public/linkopings_slotts-_och_domkyrkoomrade.jpg","Stockholm":"Linköping","Smiley":"Trolly","smiley.jpg":"trolly.jpg"}
+tabell = {"Stockholm-spring.jpg":"imagevault/publishedmedia/p1j0ds7hsi1adv0qqi3e/Toppbild-startsida-stadsvy.jpg","Stockholm":"Linköping","Smiley":"Trolly","smiley.jpg":"trolly.jpg"}
 
 
 def parse_response(s):
@@ -24,8 +24,6 @@ def add_fakenews():
     return a
 
 def check_content_type(headers):
-    accept_header = headers[3].split()[1]
-    print("\n\nACCAPT HEADER\n\n" + accept_header)
-    if "text/html" in accept_header:
+    if "text/html" in headers["Accept:"]:
         return True
     return False
