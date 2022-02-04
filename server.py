@@ -18,8 +18,6 @@ class Server:
     def get_request(self):
         self.connectionsocket, self.addr = self.serversocket.accept()
         sentence = self.connectionsocket.recv(8192).decode()
-        print(sentence)
-
         return (sentence)
 
     def sendback(self,message):
