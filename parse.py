@@ -25,8 +25,9 @@ def add_fakenews():
 
 def check_content_type(headers):
     print(headers)
-    if "Accept:" in headers:
-        if "text/html" not in headers["Accept:"]: 
-            if "image" in headers["Accept:"]:
-                return False
+    if "GET" in headers:
+        if "Accept:" in headers:
+            if "text/html" not in headers["Accept:"]: 
+                if "image" in headers["Accept:"]:
+                    return False
     return True
