@@ -1,4 +1,4 @@
-tabell = {"Stockholm-spring.jpg":"imagevault/publishedmedia/p1j0ds7hsi1adv0qqi3e/Toppbild-startsida-stadsvy.jpg","Stockholm":"Linköping","Smiley":"Trolly","smiley.jpg":"trolly.jpg"}
+tabell = {"./Stockholm-spring.jpg":"wp-content/uploads/2016/04/Linkopingskontoret-600x600.jpg","Stockholm":"Linköping","Smiley":"Trolly","smiley.jpg":"trolly.jpg"}
 
 
 def parse_response(s):

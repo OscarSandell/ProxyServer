@@ -16,9 +16,9 @@ def run():
         print("------------Making new request--------------")
         request, headers = myServer.get_request()
         text = parse.check_content_type(headers)
-        if "imagevault/publishedmedia/p1j0ds7hsi1adv0qqi3e/Toppbild-startsida-stadsvy.jpg" in request:
-            headers["GET"] = "https://www.linkoping.se/imagevault/publishedmedia/p1j0ds7hsi1adv0qqi3e/Toppbild-startsida-stadsvy.jpg"
-            headers["Host:"] = "linkoping.se"
+        if "wp-content/uploads/2016/04/Linkopingskontoret-600x600.jpg" in request:
+            headers["GET"] = "https://www.glimstedt.se/wp-content/uploads/2016/04/Linkopingskontoret-600x600.jpg"
+            headers["Host:"] = "glimstedt.se"
         myClient.establish_serverconnection(headers["Host:"])
         temp = ""
         for key,item in headers.items():
