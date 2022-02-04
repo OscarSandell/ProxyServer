@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 from socket import *
 import os
-
-
 class Server:
 
     def __init__(self):
@@ -16,14 +14,20 @@ class Server:
             self.serversocket.setsockopt(SOL_SOCKET,SO_REUSEADDR,1)
         self.serversocket.bind(('',self.Portnumber))
         self.serversocket.listen(1)
+
+        
+        
+
+    def get_request(self):
         self.connectionsocket, self.addr = self.serversocket.accept()
-        sentence = self.connectionsocket.recv(2048).decode()
+        sentence = self.connectionsocket.recv(4096).decode()
         print(sentence)
         headers = sentence.split("\r\n")
         print(headers)
-        print("printar sentence: " + sentence)
-        print("printar headers: " + headers[1])
-        return (sentence,headers[1])
+        #print("printar sentence: " + sentence)
+        print("printar headers\n\n\n\n"  )
+        print(headers)
+        return (sentence,headers)
 
     def sendback(self,message):
         self.connectionsocket.send(message)
@@ -31,7 +35,4 @@ class Server:
     def close_server(self):
         self.serversocket.close()
         self.connectionsocket.close()
-
-
-    
 
