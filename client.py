@@ -20,6 +20,7 @@ class Client:
 
 
     def sendtoserver(self,message):
+        print("Skickade:\n\n" + message)
         self.clientsocket.send(message.encode())
     
     def listentoserver(self):
