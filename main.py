@@ -16,8 +16,9 @@ def run():
         headers = make_header_dir(request)
         #Checking if get is for text or image
         text = parse.check_content_type(headers)
-        print("------------Connecting to the {}--------------\n".format(headers["Host:"]))
-        myClient.establish_serverconnection(headers["Host:"])
+        request = parse.parse_request(headers)
+        print("------------Connecting to the {}--------------\n".format(headers["Host"]))
+        myClient.establish_serverconnection(headers["Host"])
         myClient.sendtoserver(request)
         returmessage = myClient.listentoserver()
         if text:
@@ -29,12 +30,41 @@ def run():
 
 def make_header_dir(headers):
     headers = headers.split("\r\n")
-        #Delar upp headers i en dictionary med headernamn som nycklar
+    #Delar upp headers i en dictionary med headernamn som nycklar
     temp = {}
     for header in headers:
-        tmp = header.split()
-        if len(tmp) > 0:
-            temp[tmp[0]] = tmp[1]
+        if header.find("GET") != -1:
+            tmp = header.split()
+            value = ""
+            for i in range(len(tmp)-1):
+                value += tmp[i+1] + " "            
+            if len(tmp) > 0:
+                temp[tmp[0]] = value
+        else:
+            tmp = header.split(": ")
+            value = ""
+            for i in range(len(tmp)-1):
+                value += tmp[i+1]              
+            if len(tmp) > 0:
+                temp[tmp[0]] = value
     return temp 
 
+
+'''
+def make_header_dir(req):
+    headers = {}
+    for line in req.splitlines()[1:]:
+
+        if line == "" or line == "\r":
+            break
+        else:
+            head, value = line.split(": ", 1)
+            headers[head] = value
+
+    return headers
+'''
+
+
+
 run()
+
