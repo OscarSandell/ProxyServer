@@ -3,7 +3,8 @@ from gettext import find
 
 
 textReplaceDict = {"Stockholm":"Linköping","Smiley":"Trolly"}
-linkReplaceDict = {"/Stockholm-spring.jpg":"https://www.glimstedt.se/wp-content/uploads/2016/04/Linkopingskontoret-600x600.jpg","smiley.jpg":"trolly.jpg"}
+#linkReplaceDict = {"/Stockholm-spring.jpg":"https://www.glimstedt.se/wp-content/uploads/2016/04/Linkopingskontoret-600x600.jpg","smiley.jpg":"trolly.jpg"}
+linkReplaceDict = {"/Stockholm-spring.jpg":"http://www.columbia.edu/~fdc/picture-of-something.jpg","smiley.jpg":"trolly.jpg"}
 
 def parse_request(headers):
     print("Omodifierad Request: \n\n")
@@ -12,7 +13,7 @@ def parse_request(headers):
         headers["GET"] = GETHeader.replace("smiley.jpg",linkReplaceDict["smiley.jpg"])
     elif GETHeader.find("/Stockholm-spring.jpg") != -1:
         headers["GET"] = linkReplaceDict["/Stockholm-spring.jpg"]
-        headers["Host"] = "glimstedt.se"
+        headers["Host"] = "columbia.edu"
     '''
     for key,value in linkReplaceDict.items():
         for header in headers:
