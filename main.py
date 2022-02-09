@@ -39,7 +39,7 @@ def make_header_dir(headers):
             for i in range(len(tmp)-1):
                 value += tmp[i+1] + " "            
             if len(tmp) > 0:
-                temp[tmp[0]] = value
+                temp[tmp[0]] = value[:-1]
         else:
             tmp = header.split(": ")
             value = ""
