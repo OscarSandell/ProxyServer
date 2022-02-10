@@ -27,7 +27,7 @@ def parse_response(s):
     sss = str(s)
     print("\n\n\n\n\n", sss.encode(),"\n\n\n\n\n\n")
     index = sss.find("\r\n\r\n")
-    headers = sss[0:index:1]
+    headers = sss[0:index]
     print("Detta är response-headers")
     print(headers)
     print("Detta är gamla response \n\n\n\n\n\n")
@@ -126,9 +126,6 @@ def change_len(headers,int):
     string += "\r\n"
     
     return string 
-def add_fakenews():
-    a = 1
-    return a
 
 def check_content_type(headers):
     print(headers)
