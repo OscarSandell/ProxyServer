@@ -1,28 +1,19 @@
-from email import header
-from gettext import find
-
-
 textReplaceDict = {"Stockholm":"Linköping","Smiley":"Trolly"}
-#linkReplaceDict = {"/Stockholm-spring.jpg":"https://www.glimstedt.se/wp-content/uploads/2016/04/Linkopingskontoret-600x600.jpg","smiley.jpg":"trolly.jpg"}
 linkReplaceDict = {"/Stockholm-spring.jpg":"http://naturkartan-images.imgix.net/image/upload/jv1xkiprxn1fuvlg2amg/1408440053.jpg","smiley.jpg":"trolly.jpg"}
 
 def parse_request(headers):
-    print("Omodifierad Request: \n\n")
+    #print("Omodifierad Request: \n\n")
     GETHeader = str(headers["GET"])
     if GETHeader.find("smiley.jpg") != -1:
         headers["GET"] = GETHeader.replace("smiley.jpg",linkReplaceDict["smiley.jpg"])
     elif GETHeader.find("/Stockholm-spring.jpg") != -1:
-        print(headers["GET"])
+        #print(headers["GET"])
         headers["GET"] = linkReplaceDict["/Stockholm-spring.jpg"] + " HTTP/1.1"
-        print(headers["GET"])
-        print(headers["Host"])
+        #print(headers["GET"])
+        #print(headers["Host"])
         headers["Host"] = "naturkartan-images.imgix.net"
-        print(headers["Host"])
-    '''
-    for key,value in linkReplaceDict.items():
-        for header in headers:
-            headers[header] = headers[header].replace(key,value)
-    '''
+        #print(headers["Host"])
+
     request = ""
     for key,value in headers.items():
         if key == "GET":
@@ -43,6 +34,13 @@ def parse_response(s):
     message = sss[index:len(sss)]
     print(message)
 
+    truth = False
+    for keys in textReplaceDict:
+        if keys in message:
+            truth = True
+
+    if truth == False:
+        return headers + message
 
     print(message.encode())
 
@@ -72,7 +70,9 @@ def parse_response(s):
                 messages.append(message[imgIndexes[i][1]:imgIndexes[i+1][0]])
         messages.append(message[imgIndexes[len(imgIndexes)-1][1]:-1])
         print("Detta är gammla message i en lista: {}\n\n".format(messages))
-    
+    else:
+        messages.append(message)
+        
     for key,value in textReplaceDict.items():
         counter = 0
         for msg in messages:
@@ -83,23 +83,12 @@ def parse_response(s):
     print("Detta är nya message i en lista: {}\n\n".format(messages))
 
     message = ""
-    '''previousWasImgTag = False
-    for msg in messages:
-        if previousWasImgTag:
-            msg = "  " + msg
-            msg += "\n"
-        elif msg.find("<img"):
-            previousWasImgTag = True
-            msg = "  " + msg
-    '''
     for msg in messages:
         message +=msg
     contentLen = str(len(message.encode('UTF-8')))
     headers = change_len(headers,contentLen)
     print("Detta är nya parsade response \n\n\n\n\n")
-    
     print(headers + message)
-    #return headers,message
     return headers + message
 
 

@@ -52,22 +52,5 @@ def make_header_dir(headers):
                 temp[tmp[0]] = value
     return temp 
 
-
-'''
-def make_header_dir(req):
-    headers = {}
-    for line in req.splitlines()[1:]:
-
-        if line == "" or line == "\r":
-            break
-        else:
-            head, value = line.split(": ", 1)
-            headers[head] = value
-
-    return headers
-'''
-
-
-
 run()
 
