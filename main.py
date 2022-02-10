@@ -21,6 +21,9 @@ def run():
         myClient.establish_serverconnection(headers["Host"])
         myClient.sendtoserver(request)
         returmessage = myClient.listentoserver()
+
+        print("-------------Recived message from server-----------------\n\n")
+        print(returmessage)
         if text:
             returmessage = parse.parse_response(returmessage.decode()).encode()
         print("------------Sent back to browser--------------\n\n")
