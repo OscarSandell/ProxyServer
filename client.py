@@ -66,22 +66,21 @@ class Client:
         return retur'''
 
     def listentoserver(self):
-        counter = 0
+        checksize = True
         retur = b''
         size = 0
         totalsize = 0
         while True:
             receive = self.clientsocket.recv(8192)
             totalsize += len(receive)
-            if(counter < 1):
+            if(checksize == True):
                 size = self.getsize(receive)
+                checksize = False
             if not receive:
                 break
             retur += receive
             if(totalsize == size):
                 break
-            print(counter)
-            counter += 1
         return retur
 
 
