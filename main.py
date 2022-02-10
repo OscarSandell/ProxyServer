@@ -12,7 +12,7 @@ def run():
         print("------------Waiting for new request--------------\n")
         request = myServer.get_request()
         print("------------Receieved new request--------------\n")
-        print(request)
+        print("Request from broswer\n\n\n\n\n", request.encode())
         headers = make_header_dir(request)
         #Checking if get is for text or image
         text = parse.check_content_type(headers)

@@ -34,7 +34,7 @@ def parse_request(headers):
 
 def parse_response(s):
     sss = str(s)
-
+    print("\n\n\n\n\n", sss.encode(),"\n\n\n\n\n\n")
     index = sss.find("\r\n\r\n")
     headers = sss[0:index:1]
     print("Detta är response-headers")

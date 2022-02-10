@@ -29,7 +29,7 @@ class Client:
     def listentoserver(self):
         retur = b''
         while True:
-            receive = self.clientsocket.recv(1)
+            receive = self.clientsocket.recv(1024)
             if not receive:
                 break
             retur += receive
