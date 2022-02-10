@@ -12,8 +12,12 @@ def parse_request(headers):
     if GETHeader.find("smiley.jpg") != -1:
         headers["GET"] = GETHeader.replace("smiley.jpg",linkReplaceDict["smiley.jpg"])
     elif GETHeader.find("/Stockholm-spring.jpg") != -1:
-        headers["GET"] = linkReplaceDict["/Stockholm-spring.jpg"]
+        print(headers["GET"])
+        headers["GET"] = linkReplaceDict["/Stockholm-spring.jpg"] + " HTTP/1.1"
+        print(headers["GET"])
+        print(headers["Host"])
         headers["Host"] = "naturkartan-images.imgix.net"
+        print(headers["Host"])
     '''
     for key,value in linkReplaceDict.items():
         for header in headers:

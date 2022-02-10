@@ -21,7 +21,10 @@ class Client:
 
     def sendtoserver(self,message):
         print("Skickade:\n\n" + message)
+        print("Encodat\n\n")
+        print(message.encode())
         self.clientsocket.send(message.encode())
+        print("Request sent...\n")
     
     def listentoserver(self):
         retur = b''

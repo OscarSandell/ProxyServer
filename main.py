@@ -23,7 +23,7 @@ def run():
         returmessage = myClient.listentoserver()
 
         print("-------------Recived message from server-----------------\n\n")
-        print(returmessage)
+        #print(returmessage)
         if text:
             returmessage = parse.parse_response(returmessage.decode()).encode()
         print("------------Sent back to browser--------------\n\n")
