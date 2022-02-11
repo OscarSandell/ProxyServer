@@ -58,12 +58,14 @@ class Client:
         while True:
             receive = self.clientsocket.recv(8192)
             totalsize += len(receive)
+            if not receive:
+                break
             if(checksize == True):
                 contentSize, headerSize = self.estimate_response_size(receive)
                 sizeofresponse = contentSize + headerSize
+                #print("sizeofresponse: ",sizeofresponse)
                 checksize = False
-            if not receive:
-                break
+            print("Sizeofresponse and Totalsize: ",sizeofresponse, totalsize)
             retur += receive
             if(totalsize == sizeofresponse):
                 break
