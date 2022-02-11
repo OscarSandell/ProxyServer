@@ -49,12 +49,9 @@ class Client:
     def listentoserver(self):
         checksize = True
         retur = b''
-        sizeofresponse = 0
-        totalsize = 0
-        header = b''
-        message = b''
-        contentSize = 0
-        headerSize = 0
+        sizeofresponse,totalsize,contentSize,headerSize = 0,0,0,0
+        #header = b''
+        #message = b''
         while True:
             receive = self.clientsocket.recv(8192)
             totalsize += len(receive)
