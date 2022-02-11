@@ -17,10 +17,9 @@ class Server:
     def get_request(self):
         self.connectionsocket, self.addr = self.serversocket.accept()
         request = self.connectionsocket.recv(8192)
-        return (request)
+        return request, True
 
     def sendback(self,message):
-        print("Skickade tillbaka till webbläsaren")
         self.connectionsocket.send(message)
 
     def close_server(self):

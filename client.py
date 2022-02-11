@@ -17,6 +17,7 @@ class Client:
         Portnumber = 80
         self.clientsocket = socket(AF_INET,SOCK_STREAM)
         self.clientsocket.connect((self.getip(servername.decode()),Portnumber))
+        return True
 
 
     def sendtoserver(self,message):
@@ -26,14 +27,14 @@ class Client:
     def estimate_response_size(self,header):
         temp = parse.parse_respons_to_header(header)
         headersize = len(temp)
-        print("Headersize::: " ,headersize)
         ContentLengthIndex = temp.find(b'Content-Length: ')
-        backslashrindex = temp.find(b'\r',ContentLengthIndex)
-        print(temp)
-        if(temp == b''):
-            return (0,0)
-        contentlength = int(temp[ContentLengthIndex+16:backslashrindex].decode())
-
+        if ContentLengthIndex != -1:
+            backslashrindex = temp.find(b'\r',ContentLengthIndex)
+            if(temp == b''):
+                return (0,0)
+            contentlength = int(temp[ContentLengthIndex+16:backslashrindex].decode())
+        else:
+            contentlength = 0
         
         return (contentlength,headersize)
     
@@ -48,14 +49,9 @@ class Client:
             if not receive:
                 break
             if(checksize == True):
-                #if(totalsize < 8192):
-                    #Detta e hela meddelandet
-                #    print("Hej")
-                #    return (receive,b'')
                 contentSize, headerSize = self.estimate_response_size(receive)
                 sizeofresponse = contentSize + headerSize
                 checksize = False
-            print("Sizeofresponse and Totalsize: ",sizeofresponse, totalsize)
             retur += receive
             if(totalsize == sizeofresponse):
                 break
