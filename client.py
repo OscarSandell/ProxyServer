@@ -11,7 +11,6 @@ class Client:
 
     def getip(self,argument):
         address = gethostbyname(argument)
-        #print(address)
         return address
 
     def establish_serverconnection(self,servername):
@@ -21,46 +20,39 @@ class Client:
 
 
     def sendtoserver(self,message):
-        #print("Skickade:\n\n",message)
-        ##print("Encodat\n\n")
-        ##print(message.encode())
         self.clientsocket.send(message)
-        #print("Request sent...\n")
+    
     
     def estimate_response_size(self,header):
         temp = parse.parse_respons_to_header(header)
         headersize = len(temp)
         print("Headersize::: " ,headersize)
-        #print(temp)
         ContentLengthIndex = temp.find(b'Content-Length: ')
         backslashrindex = temp.find(b'\r',ContentLengthIndex)
-        #print("DETTA ÄR \/R : \n",temp[backslashrindex])
         print(temp)
         if(temp == b''):
             return (0,0)
         contentlength = int(temp[ContentLengthIndex+16:backslashrindex].decode())
-        #print("Contentlength = ",contentlength)
-        #print("Content lengthindex: ",ContentLengthIndex)
-        #totalsize = headersize + contentlength
-        ##print("Totalsize= " + str(totalsize) )
+
         
         return (contentlength,headersize)
-
+    
     def listentoserver(self):
         checksize = True
         retur = b''
         sizeofresponse,totalsize,contentSize,headerSize = 0,0,0,0
-        #header = b''
-        #message = b''
         while True:
             receive = self.clientsocket.recv(8192)
+            
             totalsize += len(receive)
             if not receive:
                 break
             if(checksize == True):
+                if(totalsize < 8192):
+                    #Detta e hela meddelandet
+                    return (receive,b'')
                 contentSize, headerSize = self.estimate_response_size(receive)
                 sizeofresponse = contentSize + headerSize
-                #print("sizeofresponse: ",sizeofresponse)
                 checksize = False
             print("Sizeofresponse and Totalsize: ",sizeofresponse, totalsize)
             retur += receive
@@ -68,9 +60,24 @@ class Client:
                 break
         header = retur[0:headerSize]
         message = retur[headerSize:]
-        ##print("Checkar så att size of header och message = sizeofresponse: {} + {} == {} ".format(len(header),len(message),sizeofresponse))
         return header, message
+    '''
+    def listentoserver(self):
+        response = b""
+        while True:
+            receive = self.clientsocket.recv(1024)
+            storlek = len(receive)
+            print("-----New Recieve of size {}----\n".format(storlek),receive,"\n\n")
+            response += receive
+            if storlek < 1024:
+                break
+        
+        
+        headersize = len(parse.parse_respons_to_header(response))
 
-
+        header = response[0:headersize]
+        message = response[headersize:]
+        return header, message
+    '''
     def close_client(self):
         self.clientsocket.close()

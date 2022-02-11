@@ -13,32 +13,36 @@ def run():
     myServer.listen()
 
     while True:
-        #print("------------Waiting for new request--------------\n")
+        print("------------Waiting for new request--------------\n")
         request = myServer.get_request()
-        #print("------------Receieved new request--------------\n")
-        #print("Request from broswer\n", request)
+        print("------------Receieved new request--------------\n")
         headers = parse.parse_header(request)
-        #Checking if get is for text or image
-        #text = parse.check_content_type(headers)
+        print(request)
+        if request == b"":
+            myClient.close_client()
+            myServer.connectionsocket.close()
+            continue
+        host = headers[b"Host:"]
+        
         if (b'GET' in headers) or (b'HTTP/' in headers):  
             request,host = parse.fake_request(headers)
-        #print("------------Connecting to the {}--------------\n".format(host))
+        print("------------Connecting to the {}--------------\n".format(host))
         myClient.establish_serverconnection(host)
         myClient.sendtoserver(request)
         headers, message = myClient.listentoserver()
         headers = parse.parse_header(headers)
         contentType = parse.get_content_type(headers)
-        ##print("This is Content-Type:", contentType)
-        #print("-------------Recived message from server-----------------\n\n")
-        ##print(headers)
-        if (b'GET' in headers) or (b'HTTP/' in headers):  
-            contentText = parse.check_content(contentType)
-            if contentText:
-                headers, message = parse.fake_response(headers,message)
+        print("-------------Recived message from server-----------------\n\n")
+        if b'HTTP/' in headers:
+            if b"200" in headers[b"HTTP/"]:                  
+                contentText = parse.check_content(contentType)
+                if contentText:
+                    headers, message = parse.fake_response(headers,message)  
+
         headers = parse.reconstruct_headers(headers)
         returmessage = headers + message
         
-        #print("------------Sent back to browser--------------\n\n")
+        print("------------Sent back to browser--------------\n\n")
         myServer.sendback(returmessage)
         myClient.close_client()
         myServer.connectionsocket.close()
