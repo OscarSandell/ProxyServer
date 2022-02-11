@@ -10,15 +10,16 @@ def parse_request(headers):
         headers[b"GET"] = GETHeader.replace(b"smiley.jpg",linkReplaceDict[b"smiley.jpg"].encode())
     elif GETHeader.find(b"/Stockholm-spring.jpg") != -1:
         headers[b"GET"] = (linkReplaceDict[b"/Stockholm-spring.jpg"] + " HTTP/1.1").encode()
-        headers[b"Host"] = b"naturkartan-images.imgix.net"
+        headers[b"Host:"] = b"naturkartan-images.imgix.net"
 
     request = b""
     for key,value in headers.items():
         if key == b"GET":
             request += key + b" " + value + b"\r\n"
         elif key != b"":
-            request += key + b": " + value + b"\r\n"
+            request += key + b" " + value + b"\r\n"
     request += b"\r\n"
+    print("Parsade request:--------------- \n\n ", request,"---------------------\n\n\n")
     return request
 
 def parse_response(s):
