@@ -30,10 +30,14 @@ class Client:
     def estimate_response_size(self,header):
         temp = parse.parse_respons_to_header(header)
         headersize = len(temp)
+        print("Headersize::: " ,headersize)
         #print(temp)
         ContentLengthIndex = temp.find(b'Content-Length: ')
         backslashrindex = temp.find(b'\r',ContentLengthIndex)
         #print("DETTA ÄR \/R : \n",temp[backslashrindex])
+        print(temp)
+        if(temp == b''):
+            return (0,0)
         contentlength = int(temp[ContentLengthIndex+16:backslashrindex].decode())
         #print("Contentlength = ",contentlength)
         #print("Content lengthindex: ",ContentLengthIndex)

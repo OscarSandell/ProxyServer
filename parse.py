@@ -173,8 +173,9 @@ def check_content_type(headers):
     return True
 
 def parse_respons_to_header(message):
-    index = message.rfind(b"\r\n\r\n") +4 
+    index = message.rfind(b"\r\n\r\n") +4
     #print(index)
+    print("message e:\n\n",message)
     temp = message[0:index]
     return temp
 
