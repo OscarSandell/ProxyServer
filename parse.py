@@ -184,16 +184,6 @@ def get_content_type(headers):
         contentType = headers[b"Content-Type:"]
     return contentType
 
-'''
-def get_content_type(header):
-    index = header.find(b'Content-Type: ')
-    if index != -1:
-        backslashr = header.find(b'\r',index)
-        ContentType = header[index+14:backslashr]
-    #ContentType = ContentType.decode()
-    return ContentType
-'''
-
 def check_content(contentType):
     if b"image" in contentType:
         return False
@@ -221,19 +211,3 @@ def parse_header(request):
                 temp[tmp[0]] = value
         
     return temp 
-
-
-    '''if header.find("GET") != -1:
-            tmp = header.split()
-            value = ""
-            for i in range(len(tmp)-1):
-                value += tmp[i+1] + " "            
-            if len(tmp) > 0:
-                temp[tmp[0]] = value[:-1]
-        elif header.find("HTTP") != -1:
-            tmp = header.split()
-            value = ""
-            for i in range(len(tmp)-1):
-                value += tmp[i+1] + " "            
-            if len(tmp) > 0:
-                temp[tmp[0]] = value[:-1]'''

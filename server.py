@@ -22,6 +22,7 @@ class Server:
 
     def sendback(self,message):
         #print(message)
+        print("Skickade tillbaka till webbläsaren")
         self.connectionsocket.send(message)
 
     def close_server(self):

@@ -20,8 +20,8 @@ def run():
         headers = parse.parse_header(request)
         #Checking if get is for text or image
         #text = parse.check_content_type(headers)
-        
-        request,host = parse.fake_request(headers)
+        if (b'GET' in headers) or (b'HTTP/' in headers):  
+            request,host = parse.fake_request(headers)
         #print("------------Connecting to the {}--------------\n".format(host))
         myClient.establish_serverconnection(host)
         myClient.sendtoserver(request)
@@ -30,10 +30,11 @@ def run():
         contentType = parse.get_content_type(headers)
         ##print("This is Content-Type:", contentType)
         #print("-------------Recived message from server-----------------\n\n")
-        ##print(headers) 
-        contentText = parse.check_content(contentType)
-        if contentText:
-            headers, message = parse.fake_response(headers,message)
+        ##print(headers)
+        if (b'GET' in headers) or (b'HTTP/' in headers):  
+            contentText = parse.check_content(contentType)
+            if contentText:
+                headers, message = parse.fake_response(headers,message)
         headers = parse.reconstruct_headers(headers)
         returmessage = headers + message
         
