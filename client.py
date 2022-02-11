@@ -48,9 +48,10 @@ class Client:
             if not receive:
                 break
             if(checksize == True):
-                if(totalsize < 8192):
+                #if(totalsize < 8192):
                     #Detta e hela meddelandet
-                    return (receive,b'')
+                #    print("Hej")
+                #    return (receive,b'')
                 contentSize, headerSize = self.estimate_response_size(receive)
                 sizeofresponse = contentSize + headerSize
                 checksize = False

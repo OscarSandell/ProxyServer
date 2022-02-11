@@ -19,12 +19,13 @@ def run():
         headers = parse.parse_header(request)
         print(request)
         if request == b"":
+            print("Tjabba")
             myClient.close_client()
             myServer.connectionsocket.close()
             continue
         host = headers[b"Host:"]
         
-        if (b'GET' in headers) or (b'HTTP/' in headers):  
+        if (b'GET' in headers): #or (b'HTTP/' in headers):  
             request,host = parse.fake_request(headers)
         print("------------Connecting to the {}--------------\n".format(host))
         myClient.establish_serverconnection(host)
@@ -41,7 +42,7 @@ def run():
 
         headers = parse.reconstruct_headers(headers)
         returmessage = headers + message
-        
+        print("Skickar detta till browsern\n\n\n",returmessage)
         print("------------Sent back to browser--------------\n\n")
         myServer.sendback(returmessage)
         myClient.close_client()
