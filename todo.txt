@@ -1,0 +1,2 @@
+1. Hantera 304, not modified. (Ingen content length så det crashar)
+2. I change_len i parse.py. Använd funktionen make_header_dir istället.

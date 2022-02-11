@@ -2,6 +2,10 @@
 import server
 import client
 import parse
+
+
+
+
 def run():
 
     myServer = server.Server()
@@ -12,49 +16,30 @@ def run():
         print("------------Waiting for new request--------------\n")
         request = myServer.get_request()
         print("------------Receieved new request--------------\n")
-        print("Request from broswer\n\n\n\n\n", request.encode())
-        headers = make_header_dir(request)
+        print("Request from broswer\n", request)
+        headers = parse.make_header_dir(request)
         #Checking if get is for text or image
-        text = parse.check_content_type(headers)
+        #text = parse.check_content_type(headers)
         
         request = parse.parse_request(headers)
-        print("------------Connecting to the {}--------------\n".format(headers["Host"]))
-        myClient.establish_serverconnection(headers["Host"])
+        print("------------Connecting to the {}--------------\n".format(headers[b"Host:"]))
+        myClient.establish_serverconnection(headers[b"Host:"])
         myClient.sendtoserver(request)
         returmessage = myClient.listentoserver()
         
-        ContentType = parse.get_content_type(returmessage).decode()
+        ContentType = parse.get_content_type(returmessage)
         print("-------------Recived message from server-----------------\n\n")
         print(returmessage)
         #if text:
         contentnottext = parse.check_content(ContentType)
         if contentnottext:
-            returmessage = parse.parse_response(returmessage.decode()).encode()
+            returmessage = parse.parse_response(returmessage)
         print("------------Sent back to browser--------------\n\n")
         myServer.sendback(returmessage)
         myClient.close_client()
         myServer.connectionsocket.close()
 
-def make_header_dir(headers):
-    headers = headers.split("\r\n")
-    #Delar upp headers i en dictionary med headernamn som nycklar
-    temp = {}
-    for header in headers:
-        if header.find("GET") != -1:
-            tmp = header.split()
-            value = ""
-            for i in range(len(tmp)-1):
-                value += tmp[i+1] + " "            
-            if len(tmp) > 0:
-                temp[tmp[0]] = value[:-1]
-        else:
-            tmp = header.split(": ")
-            value = ""
-            for i in range(len(tmp)-1):
-                value += tmp[i+1]              
-            if len(tmp) > 0:
-                temp[tmp[0]] = value
-    return temp 
+
 
 run()
 

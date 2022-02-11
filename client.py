@@ -21,10 +21,10 @@ class Client:
 
 
     def sendtoserver(self,message):
-        print("Skickade:\n\n" + message)
+        print("Skickade:\n\n",message)
         #print("Encodat\n\n")
         #print(message.encode())
-        self.clientsocket.send(message.encode())
+        self.clientsocket.send(message)
         print("Request sent...\n")
     
     def getsize(self,header):

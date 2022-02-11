@@ -17,8 +17,8 @@ class Server:
 
     def get_request(self):
         self.connectionsocket, self.addr = self.serversocket.accept()
-        sentence = self.connectionsocket.recv(8192).decode()
-        return (sentence)
+        request = self.connectionsocket.recv(8192)
+        return (request)
 
     def sendback(self,message):
         #print(message)
