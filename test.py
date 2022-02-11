@@ -7,6 +7,6 @@ sthlm = "Stockholm"
 smil = "Smiley"
 trol = "Trolly"
 
-print("Storleken av Linköping vs Stockholm = {} vs {} bytes".format(len(lkpg.encode('UTF-8')),len(sthlm.encode('UTF-8'))))
+#print("Storleken av Linköping vs Stockholm = {} vs {} bytes".format(len(lkpg.encode('UTF-8')),len(sthlm.encode('UTF-8'))))
 
-print("Storleken av Smiley vs Trolly = {} vs {} bytes".format(len(smil.encode('UTF-8')),len(trol.encode('UTF-8'))))
+#print("Storleken av Smiley vs Trolly = {} vs {} bytes".format(len(smil.encode('UTF-8')),len(trol.encode('UTF-8'))))

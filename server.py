@@ -10,7 +10,7 @@ class Server:
         self.Portnumber = 13000
         self.serversocket = socket(AF_INET,SOCK_STREAM)
         if os.name == "posix":
-            print("So reuseaddr")
+            #print("So reuseaddr")
             self.serversocket.setsockopt(SOL_SOCKET,SO_REUSEADDR,1)
         self.serversocket.bind(('',self.Portnumber))
         self.serversocket.listen(1)
