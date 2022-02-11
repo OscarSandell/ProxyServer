@@ -21,7 +21,7 @@ class Server:
         return (sentence)
 
     def sendback(self,message):
-        print(message)
+        #print(message)
         self.connectionsocket.send(message)
 
     def close_server(self):

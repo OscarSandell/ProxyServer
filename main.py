@@ -16,15 +16,19 @@ def run():
         headers = make_header_dir(request)
         #Checking if get is for text or image
         text = parse.check_content_type(headers)
+        
         request = parse.parse_request(headers)
         print("------------Connecting to the {}--------------\n".format(headers["Host"]))
         myClient.establish_serverconnection(headers["Host"])
         myClient.sendtoserver(request)
         returmessage = myClient.listentoserver()
-
+        
+        ContentType = parse.get_content_type(returmessage).decode()
         print("-------------Recived message from server-----------------\n\n")
-        #print(returmessage)
-        if text:
+        print(returmessage)
+        #if text:
+        contentnottext = parse.check_content(ContentType)
+        if contentnottext:
             returmessage = parse.parse_response(returmessage.decode()).encode()
         print("------------Sent back to browser--------------\n\n")
         myServer.sendback(returmessage)

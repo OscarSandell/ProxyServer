@@ -129,9 +129,29 @@ def change_len(headers,int):
 
 def check_content_type(headers):
     print(headers)
-    if "GET" in headers:
-        if "Accept" in headers:
-            if "text/html" not in headers["Accept"]: 
-                if "image" in headers["Accept"]:
-                    return False
+    if "Content-Type" in headers:
+        if "text/html" not in headers["Content-Type"]: 
+            if "image" in headers["Content-Type"]:
+                return False
+        
     return True
+
+def parse_respons_to_header(message):
+    index = message.rfind(b"\r\n\r\n") +4 
+    print(index)
+    temp = message[0:index]
+    return temp
+
+def get_content_type(header):
+    index = header.find(b'Content-Type: ')
+    if index != -1:
+        backslashr = header.find(b'\r',index)
+        ContentType = header[index+14:backslashr]
+    #ContentType = ContentType.decode()
+    return ContentType
+
+def check_content(headers):
+    if "image" in headers:
+        return False
+    else: 
+        return True
