@@ -2,6 +2,10 @@
 import server
 import client
 import parse
+
+
+
+
 def run():
 
     myServer = server.Server()
@@ -9,52 +13,36 @@ def run():
     myServer.listen()
 
     while True:
-        print("------------Waiting for new request--------------\n")
+        #print("------------Waiting for new request--------------\n")
         request = myServer.get_request()
-        print("------------Receieved new request--------------\n")
-        print("Request from broswer\n\n\n\n\n", request.encode())
-        headers = make_header_dir(request)
+        #print("------------Receieved new request--------------\n")
+        #print("Request from broswer\n", request)
+        headers = parse.parse_header(request)
         #Checking if get is for text or image
-        text = parse.check_content_type(headers)
+        #text = parse.check_content_type(headers)
         
-        request = parse.parse_request(headers)
-        print("------------Connecting to the {}--------------\n".format(headers["Host"]))
-        myClient.establish_serverconnection(headers["Host"])
+        request,host = parse.fake_request(headers)
+        #print("------------Connecting to the {}--------------\n".format(host))
+        myClient.establish_serverconnection(host)
         myClient.sendtoserver(request)
-        returmessage = myClient.listentoserver()
+        headers, message = myClient.listentoserver()
+        headers = parse.parse_header(headers)
+        contentType = parse.get_content_type(headers)
+        ##print("This is Content-Type:", contentType)
+        #print("-------------Recived message from server-----------------\n\n")
+        ##print(headers) 
+        contentText = parse.check_content(contentType)
+        if contentText:
+            headers, message = parse.fake_response(headers,message)
+        headers = parse.reconstruct_headers(headers)
+        returmessage = headers + message
         
-        ContentType = parse.get_content_type(returmessage).decode()
-        print("-------------Recived message from server-----------------\n\n")
-        print(returmessage)
-        #if text:
-        contentnottext = parse.check_content(ContentType)
-        if contentnottext:
-            returmessage = parse.parse_response(returmessage.decode()).encode()
-        print("------------Sent back to browser--------------\n\n")
+        #print("------------Sent back to browser--------------\n\n")
         myServer.sendback(returmessage)
         myClient.close_client()
         myServer.connectionsocket.close()
 
-def make_header_dir(headers):
-    headers = headers.split("\r\n")
-    #Delar upp headers i en dictionary med headernamn som nycklar
-    temp = {}
-    for header in headers:
-        if header.find("GET") != -1:
-            tmp = header.split()
-            value = ""
-            for i in range(len(tmp)-1):
-                value += tmp[i+1] + " "            
-            if len(tmp) > 0:
-                temp[tmp[0]] = value[:-1]
-        else:
-            tmp = header.split(": ")
-            value = ""
-            for i in range(len(tmp)-1):
-                value += tmp[i+1]              
-            if len(tmp) > 0:
-                temp[tmp[0]] = value
-    return temp 
+
 
 run()
 
