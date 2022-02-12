@@ -5,13 +5,11 @@ import parse
 import sys
 import os
 
-
 def run():
 
     #First we instantiate the server- and the clientobjects of the proxy.
     myServer = server.Server()
     myClient = client.Client()
-    
     #The server opens the proxyport specified by your commandline and starts listening on it
     arguments = sys.argv
     print("Your os = ", os.name)
@@ -105,6 +103,7 @@ def run():
             #Send back the complete response.
             myServer.sendback(returmessage)  
         except:
+            #print(f"{bcolors.WARNING}Warning: No active frommets remain. Continue?{bcolors.ENDC}")
             print("Something went wrong, this request have been dropped\n")
         finally:
             #Close the connection to the webbrowser and the webserver.
