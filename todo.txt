@@ -1,3 +1,0 @@
-1. Skriva komentarer
-2. Skriva rapport
-3. Dubbelkolla case sensitive.
