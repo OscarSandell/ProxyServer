@@ -9,21 +9,23 @@ class Client:
     def __init__(self):
         print("Client Created.")
 
+    #Translates hostname into an IP address
     def getip(self,argument):
         address = gethostbyname(argument)
         return address
 
+    #Establish a connection with the webserver.
     def establish_serverconnection(self,servername):
         Portnumber = 80
         self.clientsocket = socket(AF_INET,SOCK_STREAM)
         self.clientsocket.connect((self.getip(servername.decode()),Portnumber))
         return True
 
-
+    #Sends message to the webserver.
     def sendtoserver(self,message):
         self.clientsocket.send(message)
     
-    
+    #Estimates the size of the complete response message.
     def estimate_response_size(self,header):
         temp = parse.parse_respons_to_header(header)
         headersize = len(temp)
@@ -38,13 +40,13 @@ class Client:
         
         return (contentlength,headersize)
     
+    #Listens to the server response.
     def listentoserver(self):
         checksize = True
         retur = b''
         sizeofresponse,totalsize,contentSize,headerSize = 0,0,0,0
         while True:
             receive = self.clientsocket.recv(8192)
-            
             totalsize += len(receive)
             if not receive:
                 break
@@ -76,5 +78,6 @@ class Client:
         message = response[headersize:]
         return header, message
     '''
+    #Closes the socket to the webserver.
     def close_client(self):
         self.clientsocket.close()
