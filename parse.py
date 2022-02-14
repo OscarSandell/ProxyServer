@@ -125,9 +125,11 @@ def check_content_type(headers):
 #Extracts the header from the complete message. 
 #This function is invoked when we receive data from our socket (The first iteration)
 def parse_respons_to_header(message):
-    index = message.find(b"\r\n\r\n") +4
-    temp = message[0:index]
-    return temp
+    index = message.find(b"\r\n\r\n")
+    temp = message[0:index+4]
+    if index == -1:
+        return (temp,False)
+    return (temp,True)
 
 #Gets the content type
 def get_content_type(headers):
