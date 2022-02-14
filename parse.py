@@ -2,14 +2,16 @@ textReplaceDict = {b"Stockholm":"Linköping",b"Smiley":"Trolly"}
 linkReplaceDict = {b"/Stockholm-spring.jpg":"http://naturkartan-images.imgix.net/image/upload/jv1xkiprxn1fuvlg2amg/1408440053.jpg",b"smiley.jpg":"trolly.jpg"}
 
 #Main function to try and modify request. 
-def fake_request(headers):
-    headers, foundLinksToReplace = replace_header(headers)
-    request = reconstruct_headers(headers)
+#Pretty self explanatory :P
+def FakeRequest(headers):
+    headers, foundLinksToReplace = ReplaceHeader(headers)
+    request = ReconstructHeader(headers)
     host = headers[b"Host:"]
     return request, host, foundLinksToReplace
 
-#Replaces header links by looking up the headertitle GET and Host and checking them against our two dictionaries textReplaceDict and linkReplaceDict.
-def replace_header(headers):
+#Replaces header links by looking up the headertitle GET and Host. Then it's checking them against
+#our two dictionaries textReplaceDict and linkReplaceDict.
+def ReplaceHeader(headers):
     headers = dict(headers)
     foundLinksToReplace = False
     GETHeader = headers[b"GET"]
@@ -24,7 +26,8 @@ def replace_header(headers):
     return headers, foundLinksToReplace
 
 #Reconstructs a bytestring from the headers dictionary.
-def reconstruct_headers(headers):
+#Goes through the headers dictionary and properly reconstructs it into a byte string.
+def ReconstructHeader(headers):
     request = b""
     for key,value in headers.items():
         if key == b"GET":
@@ -37,7 +40,9 @@ def reconstruct_headers(headers):
     return request
 
 #Main function to replace the response and change content length if nessesary.
-def fake_response(headers,message):
+#First it checks if any of the keywords to replace are in the text, if notwe just return
+#the headers, the message and a bool to tell the main loop that no changes has been made.
+def FakeResponse(headers,message):
     headers = dict(headers)
     message = bytes(message)
 
@@ -49,17 +54,21 @@ def fake_response(headers,message):
     if (dictionaryWordsInMessage == False):
         return headers, message,dictionaryWordsInMessage
 
-    message = replace_message(message)
+    message = ReplaceMessage(message)
     
     contentLen = len(message)
-    headers = change_len(headers,contentLen)
+    headers = ChangeContentLength(headers,contentLen)
     
     return headers, message, dictionaryWordsInMessage
 
 #Replaces the words in the text without changing the links in any <img/> html tag.
-def replace_message(message):
-    tagsIndexes = find_img_indexes(message)
-    segments = segment_message(message,tagsIndexes)
+#It finds the index position of "<img>" in the message and then seperates the entire
+#message into segments with "<img>" tags and segments without. It then goes through
+#the segments and only replaces smiley and stockholm in the segments that does not
+#contain this tag.
+def ReplaceMessage(message):
+    tagsIndices = FindImageIndices(message)
+    segments = SegmentMessage(message,tagsIndices)
 
     for key,value in textReplaceDict.items():
         counter = 0
@@ -67,11 +76,11 @@ def replace_message(message):
             if b"<img" not in seg:
                 segments[counter] = seg.replace(key,value.encode())
             counter += 1
-    message = reconstruct_message(segments)
+    message = ReconstructMessage(segments)
     return message
 
 #Reconstructs the message from the previously made segments.
-def reconstruct_message(segments):
+def ReconstructMessage(segments):
     message = b""
     for seg in segments:
         message +=seg
@@ -79,22 +88,27 @@ def reconstruct_message(segments):
     return message
 
 #Segments the message to allow us not to replace the text in any <img/> html tag.
-def segment_message(message,tagsIndexes):
-    messages = []
+#We are seperating the text and messages into a list separately, for instance the list can look something 
+#like this = ["smiley likes blalala","<img ./Stockholm />","something more texty Stockholm"].
+#This is so that we can selectively replace the words we want inside the correct segment of the text.
+def SegmentMessage(message,tagsIndices):
+    segments = []
     
-    if len(tagsIndexes) > 0:
-        messages.append(message[0:tagsIndexes[0][0]])
-        for i in range(len(tagsIndexes)):
-            messages.append(message[tagsIndexes[i][0]:tagsIndexes[i][1]])
-            if i+1 < len(tagsIndexes):
-                messages.append(message[tagsIndexes[i][1]:tagsIndexes[i+1][0]])
-        messages.append(message[tagsIndexes[len(tagsIndexes)-1][1]:-1])
+    if len(tagsIndices) > 0:
+        segments.append(message[0:tagsIndices[0][0]])
+        for i in range(len(tagsIndices)):
+            segments.append(message[tagsIndices[i][0]:tagsIndices[i][1]])
+            if i+1 < len(tagsIndices):
+                segments.append(message[tagsIndices[i][1]:tagsIndices[i+1][0]])
+        segments.append(message[tagsIndices[len(tagsIndices)-1][1]:-1])
     else:
-        messages.append(message)
-    return messages
+        segments.append(message)
+    return segments
 
-#Finding the indexes of the <img/> html tags to be able to segment properly.
-def find_img_indexes(message):
+#This function will execute if we find any of our keywords to replace in the response
+#In this function we are finding the indices of the <img/> html tags to be able to separate the tags 
+#from the plain text so that we can replace the words to replace with the decired elements.
+def FindImageIndices(message):
     imgIndexes = []
     imgIndexStart = 0
     while message.find(b"<img",imgIndexStart) != -1:
@@ -108,23 +122,25 @@ def find_img_indexes(message):
     return imgIndexes
 
 #Change information in the Content-Length headertitle.
-def change_len(headers,newlength):
+def ChangeContentLength(headers,newlength):
     headers[b"Content-Length"] = str(newlength).encode()
     return headers 
 
-#Checking if the content type is an image or not.
-def check_content_type(headers):
+#Checking if the content type is an image or not by grabbing the 
+#Content-Type header from the headers dictionary and checking its
+#value.
+def CheckContentType(headers):
     headers = dict(headers)
     if b"Content-Type:" in headers:
-        contentType = get_content_type(headers)
+        contentType = GetContentType(headers)
         if b"text/html" not in contentType: 
             if b"image" in contentType:
                 return False
     return True
 
 #Extracts the header from the complete message. 
-#This function is invoked when we receive data from our socket (The first iteration)
-def parse_respons_to_header(message):
+#This function is invoked when we receive data from our socket (most likely the first iteration) and it returns temp
+def ParseResponseToHeaders(message):
     index = message.find(b"\r\n\r\n")
     temp = message[0:index+4]
     if index == -1:
@@ -132,14 +148,14 @@ def parse_respons_to_header(message):
     return (temp,True)
 
 #Gets the content type
-def get_content_type(headers):
+def GetContentType(headers):
     contentType = headers[b"Content-Type:"]
     return contentType
 
 
 #Dividing up the request message into lines and then we create a dictionary
 #that contains the header titles as a key and its information as its value.
-def parse_header(request):
+def ParseHeader(request):
     headers = request.split(b"\r\n")
     temp = {}
     for header in headers:
@@ -155,28 +171,3 @@ def parse_header(request):
             temp[tmp[0]] = tmp[1]
         
     return temp 
-
-'''
-    #Dividing up the request message into lines and then we create a dictionary
-#that contains the header titles as a key and its information as its value.
-def parse_header(request):
-    headers = request.split(b"\r\n")
-    temp = {}
-    for header in headers:
-        if b'GET' or b'HTTP' in header:
-            tmp = header.split()
-            value = b""
-            for i in range(len(tmp)-1):
-                value += tmp[i+1] + b" "            
-            if len(tmp) > 0:
-                temp[tmp[0]] = value[:-1]
-        else:
-            tmp = header.split(b": ")
-            value = b""
-            for i in range(len(tmp)-1):
-                value += tmp[i+1]              
-            if len(tmp) > 0:
-                temp[tmp[0]] = value
-        
-    return temp 
-    '''

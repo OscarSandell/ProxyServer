@@ -6,27 +6,30 @@ class Server:
     def __init__(self):
         print("Server Created.")
 
-    #Takes portnumber as argument and binds the port to a TCP socket, we are using ipv4 
-    def listen(self,portnumber):
-        self.Portnumber = portnumber
-        self.serversocket = socket(AF_INET,SOCK_STREAM)
+    #Takes portnumber as argument and binds the port to a TCP socket, we are using ipv4.
+    def Listen(self,portnumber):
+        self.portnumber = portnumber
+        self.serverSocket = socket(AF_INET,SOCK_STREAM)
+
+        #We use os.name to check what system we are using, if it is posix we reuse the bound port.
         if os.name == "posix":
             self.serversocket.setsockopt(SOL_SOCKET,SO_REUSEADDR,1)
-        self.serversocket.bind(('',self.Portnumber))
-        self.serversocket.listen()
 
-    #We receeive a request from our browser that contains att the most 8KiB of data which is the normal standard
-    def get_request(self):
-        self.connectionsocket, self.addr = self.serversocket.accept()
-        request = self.connectionsocket.recv(8192)
+        self.serverSocket.bind(('',self.portnumber))
+        self.serverSocket.listen()
+
+    #We receive a request from our browser that contains att the most 8KiB of data which is the normal standard.
+    def GetRequest(self):
+        self.connectionSocket, self.addr = self.serverSocket.accept()
+        request = self.connectionSocket.recv(8192)
         return request, True
 
     #Sends message back to the browser.
-    def sendback(self,message):
-        self.connectionsocket.send(message)
+    def SendBack(self,message):
+        self.connectionSocket.send(message)
 
     #Closes the socket 
-    def close_server(self):
-        self.serversocket.close()
-        self.connectionsocket.close()
+    def CloseServer(self):
+        self.serverSocket.close()
+        self.connectionSocket.close()
 
