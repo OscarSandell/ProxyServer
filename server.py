@@ -13,7 +13,7 @@ class Server:
 
         #We use os.name to check what system we are using, if it is posix we reuse the bound port.
         if os.name == "posix":
-            self.serversocket.setsockopt(SOL_SOCKET,SO_REUSEADDR,1)
+            self.serverSocket.setsockopt(SOL_SOCKET,SO_REUSEADDR,1)
 
         self.serverSocket.bind(('',self.portnumber))
         self.serverSocket.listen()
